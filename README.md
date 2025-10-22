@@ -242,7 +242,7 @@ btn_label_height = 48  # Label height
 Edit `login.py`:
 ```python
 valid_users = {
-    "admin": "admin123",
+    "stakeholder id ": "their password",
     "your_username": "your_password"
 }
 ```

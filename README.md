@@ -9,10 +9,7 @@ A complete Python-based attendance management system using face recognition tech
 - Secure access control
 - Multiple user support
 
-**Default Credentials:**
-- Username: `admin` | Password: `admin123`
-- Username: `user` | Password: `user123`
-- Username: `test` | Password: `test123`
+
 
 ### 2. **Student Management System**
 - ✅ Add new students

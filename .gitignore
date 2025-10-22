@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+.env
+.venv
+venv/
+ENV/
+env/
+
+# IDE/editor
+.vscode/
+.idea/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Runtime artifacts
+attendance_records/*.csv
+unknown_faces/*.jpg
+data/*.jpg
+temp_face.jpg
+
+# Logs
+*.log

@@ -1,0 +1,32 @@
+# Face Recognition Attendance System - Required Packages
+
+# Core packages
+opencv-python==4.12.0.88
+opencv-contrib-python==4.12.0.88
+deepface>=0.0.79
+numpy>=1.24.0
+pillow>=10.0.0
+
+# Deep learning backend (TensorFlow CPU on Windows)
+tensorflow==2.17.1
+tensorflow-intel==2.17.1
+keras==3.5.0
+tf-keras==2.17.0
+
+
+
+# Excel export
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Optional: MySQL database support
+# Uncomment if you want to use MySQL
+# mysql-connector-python>=8.0.0
+# pymysql>=1.0.0
+
+# Optional: PDF report generation
+# Uncomment if you want PDF reports
+# reportlab>=4.0.0
+
+# Installation instructions:
+# pip install -r requirements.txt

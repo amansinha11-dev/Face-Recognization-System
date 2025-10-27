@@ -966,11 +966,6 @@ class FaceRecognition:
                     os.makedirs(folder)
                 except Exception:
                     pass
-        # Camera meta + FPS tracking
-        self.current_camera_meta = None
-        self._fps_counter = 0
-        self._fps_t0 = time.time()
-        self._fps_measured = 0.0
         # Load student database (for attendance enrichment)
         self._load_student_database()
 
@@ -1224,30 +1219,6 @@ class FaceRecognition:
             messagebox.showerror("Error", "Camera opened but sent only black frames. Close other apps using camera and try again.")
             return
         self.current_video = cap
-        # Store camera meta and reset FPS counters
-        if isinstance(meta, dict):
-            self.current_camera_meta = meta
-        else:
-            self.current_camera_meta = {
-                'backend': meta or 'Unknown',
-                'codec': 'DEFAULT',
-                'fps': int(cap.get(cv2.CAP_PROP_FPS) or 0),
-            }
-        self._fps_counter = 0
-        self._fps_t0 = time.time()
-        self._fps_measured = 0.0
-        # Enrich meta with live width/height
-        try:
-            self.current_camera_meta['width'] = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) or 0)
-            self.current_camera_meta['height'] = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) or 0)
-        except Exception:
-            pass
-        self.update_info(
-            f"Camera selected: {self.current_camera_meta.get('backend','?')}/"
-            f"{self.current_camera_meta.get('codec','?')} "
-            f"{self.current_camera_meta.get('width','?')}x{self.current_camera_meta.get('height','?')}"
-            f" @~{self.current_camera_meta.get('fps',0)}"
-        )
         print(f"Recognition camera selected: {meta}")
         self.update_info("Camera ready - recognizing faces...")
         self.recognition_active = True
@@ -1259,14 +1230,6 @@ class FaceRecognition:
         if not self.recognition_active or self.current_video is None:
             return
         ret, frame = self.current_video.read()
-        # FPS measurement
-        if ret and frame is not None and frame.size > 0:
-            self._fps_counter += 1
-            dt = time.time() - self._fps_t0
-            if dt >= 1.0:
-                self._fps_measured = self._fps_counter / max(dt, 1e-6)
-                self._fps_counter = 0
-                self._fps_t0 = time.time()
         if not ret or frame is None or frame.size == 0:
             # try once more before stopping
             ret2, frame2 = (self.current_video.read() if self.current_video else (False, None))
@@ -1378,24 +1341,6 @@ class FaceRecognition:
                 cv2.rectangle(frame, (x, y-30), (x+w, y), disp_color, cv2.FILLED)
                 cv2.putText(frame, display_name, (x+6, y-8), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
 
-        # Add info overlay (mode, camera meta, FPS, brightness, timestamp)
-        try:
-            recognition_mode = "FaceNet" if self.use_facenet else "LBPH"
-            cv2.putText(frame, f"Mode: {recognition_mode} | Recognized: {len(self.marked_today)}", (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-            meta = self.current_camera_meta or {}
-            curr_brightness = float(frame.mean()) if frame is not None and frame.size else 0.0
-            res_w = frame.shape[1] if frame is not None else meta.get('width', '?')
-            res_h = frame.shape[0] if frame is not None else meta.get('height', '?')
-            meta_line1 = f"{meta.get('backend','?')}/{meta.get('codec','?')} | {res_w}x{res_h}"
-            meta_line2 = f"Driver FPS~{meta.get('fps',0)} | Measured FPS~{self._fps_measured:.1f} | Brightness~{curr_brightness:.1f}"
-            cv2.putText(frame, meta_line1, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
-            cv2.putText(frame, meta_line2, (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
-            cv2.putText(frame, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), (10, frame.shape[0]-10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
-        except Exception:
-            pass
-
         # Render to Tk Label
         try:
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -1426,10 +1371,6 @@ class FaceRecognition:
             self.video_label.imgtk = None
         except Exception:
             pass
-        # Clear meta/FPS
-        self.current_camera_meta = None
-        self._fps_counter = 0
-        self._fps_measured = 0.0
         self.update_status("Recognition stopped", '#2ECC71')
         self.update_info("Face recognition stopped")
 

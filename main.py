@@ -125,38 +125,30 @@ class Face_Recognition_System:
         except:
             pass
         
+        # Store animated GIF data
+        self.gif_frames = {}
+        self.gif_labels = {}
+        self.current_frames = {}
+        
         # Title
         title_lbl = Label(self.root, text="FACE RECOGNITION ATTENDANCE SYSTEM", 
                          font=("Arial", 40, "bold"), bg="white", fg="red")
         title_lbl.place(x=0, y=0, width=1366, height=70)
         
-        # Top Image Section - 3 images side by side with proper initialization
+        # Top Image Section - Single image spanning full width
         try:
-            img_top = Image.new('RGB', (455, 140), color='lightblue')
+            img_top = Image.open(r"images/Three colour images.png")
+            img_top = img_top.resize((1366, 140), Image.Resampling.LANCZOS)
             self.photoimg_top = ImageTk.PhotoImage(img_top)
-            f_lbl = Label(self.root, image=self.photoimg_top, bg='lightblue')
-            f_lbl.place(x=0, y=70, width=455, height=140)
-        except:
+            f_lbl = Label(self.root, image=self.photoimg_top)
+            f_lbl.place(x=0, y=70, width=1366, height=140)
+        except Exception as e:
+            print(f"Failed to load Three colour images.png: {e}")
+            # Fallback to colored sections if image fails to load
             f_lbl = Label(self.root, bg='lightblue')
             f_lbl.place(x=0, y=70, width=455, height=140)
-        
-        # Second Image
-        try:
-            img_top1 = Image.new('RGB', (455, 140), color='lightgreen')
-            self.photoimg_top1 = ImageTk.PhotoImage(img_top1)
-            f_lbl1 = Label(self.root, image=self.photoimg_top1, bg='lightgreen')
-            f_lbl1.place(x=455, y=70, width=456, height=140)
-        except:
             f_lbl1 = Label(self.root, bg='lightgreen')
             f_lbl1.place(x=455, y=70, width=456, height=140)
-        
-        # Third Image
-        try:
-            img_top2 = Image.new('RGB', (455, 140), color='lightyellow')
-            self.photoimg_top2 = ImageTk.PhotoImage(img_top2)
-            f_lbl2 = Label(self.root, image=self.photoimg_top2, bg='lightyellow')
-            f_lbl2.place(x=911, y=70, width=455, height=140)
-        except:
             f_lbl2 = Label(self.root, bg='lightyellow')
             f_lbl2.place(x=911, y=70, width=455, height=140)
         
@@ -198,10 +190,43 @@ class Face_Recognition_System:
             img = Image.new('RGB', (width, height), color=color)
             return ImageTk.PhotoImage(img)
         
+        # Helper function to load and animate GIF
+        def load_animated_gif(filepath, width, height, button_id):
+            """Load animated GIF and extract all frames"""
+            try:
+                gif = Image.open(filepath)
+                frames = []
+                try:
+                    while True:
+                        # Resize frame and convert to PhotoImage
+                        frame = gif.copy()
+                        frame = frame.resize((width, height), Image.Resampling.LANCZOS)
+                        photo = ImageTk.PhotoImage(frame)
+                        frames.append(photo)
+                        gif.seek(len(frames))  # Move to next frame
+                except EOFError:
+                    pass  # End of frames
+                
+                if frames:
+                    self.gif_frames[button_id] = frames
+                    self.current_frames[button_id] = 0
+                    return frames[0]
+                else:
+                    return None
+            except Exception as e:
+                print(f"Error loading animated GIF {filepath}: {e}")
+                return None
+        
         # ROW 1 BUTTONS - All using exact same dimensions
         
-        # Student Details Button (Blue)
-        self.photoimg1 = create_button_image('#0000FF', btn_width, btn_height)
+        # Student Details Button (Blue) - with icon from images folder
+        try:
+            img1 = Image.open(r"images/Student Details.jpg")
+            img1 = img1.resize((btn_width, btn_height), Image.Resampling.LANCZOS)
+            self.photoimg1 = ImageTk.PhotoImage(img1)
+        except Exception as e:
+            print(f"Failed to load Student Details icon: {e}")
+            self.photoimg1 = create_button_image('#0000FF', btn_width, btn_height)
         
         b1 = Button(bg_lbl, image=self.photoimg1, command=self.student_details, cursor="hand2", bd=0, relief=FLAT)
         b1.place(x=col1_x, y=row1_y, width=btn_width, height=btn_height)
@@ -210,18 +235,27 @@ class Face_Recognition_System:
                      font=("Arial", 16, "bold"), bg="darkblue", fg="white", bd=0, relief=FLAT, activebackground="blue")
         b1_1.place(x=col1_x, y=row1_label_y, width=btn_width, height=btn_label_height)
         
-        # Face Detector Button (Red)
-        self.photoimg2 = create_button_image('#FF0000', btn_width, btn_height)
+        # Face Detector Button (Red) - with animated GIF from images folder
+        self.photoimg2 = load_animated_gif(r"images/Face Detector.gif", btn_width, btn_height, 'face_detector')
+        if not self.photoimg2:
+            self.photoimg2 = create_button_image('#FF0000', btn_width, btn_height)
         
         b2 = Button(bg_lbl, image=self.photoimg2, command=self.face_recognition, cursor="hand2", bd=0, relief=FLAT)
         b2.place(x=col2_x, y=row1_y, width=btn_width, height=btn_height)
+        self.gif_labels['face_detector'] = b2
         
         b2_1 = Button(bg_lbl, text="Face Detector", command=self.face_recognition, cursor="hand2",
                      font=("Arial", 16, "bold"), bg="darkblue", fg="white", bd=0, relief=FLAT, activebackground="blue")
         b2_1.place(x=col2_x, y=row1_label_y, width=btn_width, height=btn_label_height)
         
-        # Attendance Button (Green)
-        self.photoimg3 = create_button_image('#008000', btn_width, btn_height)
+        # Attendance Button (Green) - with icon from images folder
+        try:
+            img3 = Image.open(r"images/Attendance.png")
+            img3 = img3.resize((btn_width, btn_height), Image.Resampling.LANCZOS)
+            self.photoimg3 = ImageTk.PhotoImage(img3)
+        except Exception as e:
+            print(f"Failed to load Attendance icon: {e}")
+            self.photoimg3 = create_button_image('#008000', btn_width, btn_height)
         
         b3 = Button(bg_lbl, image=self.photoimg3, command=self.attendance, cursor="hand2", bd=0, relief=FLAT)
         b3.place(x=col3_x, y=row1_y, width=btn_width, height=btn_height)
@@ -230,8 +264,14 @@ class Face_Recognition_System:
                      font=("Arial", 16, "bold"), bg="darkblue", fg="white", bd=0, relief=FLAT, activebackground="blue")
         b3_1.place(x=col3_x, y=row1_label_y, width=btn_width, height=btn_label_height)
         
-        # Train Data Button (Purple)
-        self.photoimg4 = create_button_image('#800080', btn_width, btn_height)
+        # Train Data Button (Purple) - with icon from images folder
+        try:
+            img4 = Image.open(r"images/Train Data.png")
+            img4 = img4.resize((btn_width, btn_height), Image.Resampling.LANCZOS)
+            self.photoimg4 = ImageTk.PhotoImage(img4)
+        except Exception as e:
+            print(f"Failed to load Train Data icon: {e}")
+            self.photoimg4 = create_button_image('#800080', btn_width, btn_height)
         
         b4 = Button(bg_lbl, image=self.photoimg4, command=self.train_data, cursor="hand2", bd=0, relief=FLAT)
         b4.place(x=col4_x, y=row1_y, width=btn_width, height=btn_height)
@@ -242,45 +282,77 @@ class Face_Recognition_System:
         
         # ROW 2 BUTTONS - All using exact same dimensions
         
-        # Photos Button (Orange)
-        self.photoimg5 = create_button_image('#FFA500', btn_width, btn_height)
+        # Photos Button (Orange) - with animated GIF from images folder
+        self.photoimg5 = load_animated_gif(r"images/Photos.gif", btn_width, btn_height, 'photos')
+        if not self.photoimg5:
+            self.photoimg5 = create_button_image('#FFA500', btn_width, btn_height)
         
         b5 = Button(bg_lbl, image=self.photoimg5, command=self.open_img, cursor="hand2", bd=0, relief=FLAT)
         b5.place(x=col1_x, y=row2_y, width=btn_width, height=btn_height)
+        self.gif_labels['photos'] = b5
         
         b5_1 = Button(bg_lbl, text="Photos", command=self.open_img, cursor="hand2",
                      font=("Arial", 16, "bold"), bg="darkblue", fg="white", bd=0, relief=FLAT, activebackground="blue")
         b5_1.place(x=col1_x, y=row2_label_y, width=btn_width, height=btn_label_height)
         
-        # Developer Button (Cyan)
-        self.photoimg6 = create_button_image('#00FFFF', btn_width, btn_height)
+        # Developer Button (Cyan) - with animated GIF from images folder
+        self.photoimg6 = load_animated_gif(r"images/Developer.gif", btn_width, btn_height, 'developer')
+        if not self.photoimg6:
+            self.photoimg6 = create_button_image('#00FFFF', btn_width, btn_height)
         
         b6 = Button(bg_lbl, image=self.photoimg6, command=self.developer, cursor="hand2", bd=0, relief=FLAT)
         b6.place(x=col2_x, y=row2_y, width=btn_width, height=btn_height)
+        self.gif_labels['developer'] = b6
         
         b6_1 = Button(bg_lbl, text="Developer", command=self.developer, cursor="hand2",
                      font=("Arial", 16, "bold"), bg="darkblue", fg="white", bd=0, relief=FLAT, activebackground="blue")
         b6_1.place(x=col2_x, y=row2_label_y, width=btn_width, height=btn_label_height)
         
-        # Help Button (Yellow)
-        self.photoimg7 = create_button_image('#FFFF00', btn_width, btn_height)
+        # Help Button (Yellow) - with animated GIF from images folder
+        self.photoimg7 = load_animated_gif(r"images/help.gif", btn_width, btn_height, 'help')
+        if not self.photoimg7:
+            self.photoimg7 = create_button_image('#FFFF00', btn_width, btn_height)
         
         b7 = Button(bg_lbl, image=self.photoimg7, command=self.help, cursor="hand2", bd=0, relief=FLAT)
         b7.place(x=col3_x, y=row2_y, width=btn_width, height=btn_height)
+        self.gif_labels['help'] = b7
         
         b7_1 = Button(bg_lbl, text="Help", command=self.help, cursor="hand2",
                      font=("Arial", 16, "bold"), bg="darkblue", fg="white", bd=0, relief=FLAT, activebackground="blue")
         b7_1.place(x=col3_x, y=row2_label_y, width=btn_width, height=btn_label_height)
         
-        # Exit Button (Pink)
-        self.photoimg8 = create_button_image('#FFC0CB', btn_width, btn_height)
+        # Exit Button (Pink) - with animated GIF from images folder
+        self.photoimg8 = load_animated_gif(r"images/Exit.gif", btn_width, btn_height, 'exit')
+        if not self.photoimg8:
+            self.photoimg8 = create_button_image('#FFC0CB', btn_width, btn_height)
         
         b8 = Button(bg_lbl, image=self.photoimg8, command=self.exit_app, cursor="hand2", bd=0, relief=FLAT)
         b8.place(x=col4_x, y=row2_y, width=btn_width, height=btn_height)
+        self.gif_labels['exit'] = b8
+        
+        # Start GIF animation
+        self.animate_gifs()
         
         b8_1 = Button(bg_lbl, text="Exit", command=self.exit_app, cursor="hand2",
                      font=("Arial", 16, "bold"), bg="darkblue", fg="white", bd=0, relief=FLAT, activebackground="blue")
         b8_1.place(x=col4_x, y=row2_label_y, width=btn_width, height=btn_label_height)
+    
+    def animate_gifs(self):
+        """Animate all GIF buttons by cycling through frames"""
+        try:
+            for button_id, frames in self.gif_frames.items():
+                if button_id in self.gif_labels and frames:
+                    # Get current frame index
+                    current_idx = self.current_frames[button_id]
+                    # Update button image
+                    self.gif_labels[button_id].configure(image=frames[current_idx])
+                    # Move to next frame (loop back to 0 if at end)
+                    self.current_frames[button_id] = (current_idx + 1) % len(frames)
+            
+            # Schedule next animation update (100ms for smooth animation)
+            self.root.after(100, self.animate_gifs)
+        except Exception as e:
+            print(f"Animation error: {e}")
     
     def open_img(self):
         os.startfile("data")
@@ -1565,7 +1637,7 @@ class Help:
         title_lbl.place(x=0, y=0, width=1530, height=45)
         
         # Help Info
-        help_label = Label(self.root, text="For any help, please contact support@facereco.com", 
+        help_label = Label(self.root, text="For any help, please contact 2306096@kiit.ac.in Chat Bot Will Be Integrating Soon"   , 
                           font=("times new roman", 20, "bold"), bg="white")
         help_label.place(x=0, y=100, width=1530, height=100)
 

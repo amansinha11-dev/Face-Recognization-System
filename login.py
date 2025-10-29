@@ -6,6 +6,8 @@ from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 import os
 
+from main import Student
+
 class LoginWindow:
     def __init__(self, root, on_success=None):
         self.root = root
@@ -151,7 +153,7 @@ class LoginWindow:
                 "access_level": "Test Access"
             }
         }
-
+                    
         if username == "" or password == "":
             messagebox.showerror("Error", "All fields are required!", parent=self.root)
         elif username in valid_users and valid_users[username]["password"] == password:

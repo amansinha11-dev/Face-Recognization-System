@@ -359,11 +359,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact & Support
 
-For support, email: [Your Email]
+For support, email: sinhaaman473@gmail.com
 For issues and bugs: [GitHub Issues](https://github.com/amansinha11-dev/Face-Recognization-System/issues)
 
 ---
 
 **⭐ Star this repository if you find it helpful!**
 
-Made with ❤️ by Aman Sinha

@@ -85,6 +85,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            color: inherit;
         }
         .feature-card:hover {
             transform: translateY(-10px);
@@ -149,7 +150,7 @@
         {% endwith %}
 
         <div class="features-grid">
-            <a href="#" class="feature-card" onclick="alert('Student Details: View and manage student information. This feature allows you to add, edit, and view student records for the attendance system.'); return false;">
+            <a href="{{ url_for('student_details') }}" class="feature-card">
                 <div class="feature-icon">👨‍🎓</div>
                 <div class="feature-label">Student Details</div>
             </a>
@@ -159,27 +160,27 @@
                 <div class="feature-label">Face Detector</div>
             </a>
 
-            <a href="#" class="feature-card" onclick="alert('Attendance Records: View and manage attendance data. Generate reports and export attendance records for analysis.'); return false;">
+            <a href="{{ url_for('attendance') }}" class="feature-card">
                 <div class="feature-icon">✅</div>
                 <div class="feature-label">Attendance</div>
             </a>
 
-            <a href="#" class="feature-card" onclick="alert('Train Data: Train the face recognition model with new data. Add face images to improve recognition accuracy.'); return false;">
+            <a href="{{ url_for('train_data') }}" class="feature-card">
                 <div class="feature-icon">📊</div>
                 <div class="feature-label">Train Data</div>
             </a>
 
-            <a href="#" class="feature-card" onclick="alert('Photos: View and manage photo gallery. Browse captured face images and student photos stored in the system.'); return false;">
+            <a href="{{ url_for('photos') }}" class="feature-card">
                 <div class="feature-icon">📷</div>
                 <div class="feature-label">Photos</div>
             </a>
 
-            <a href="#" class="feature-card" onclick="alert('Developer Information: Created by Aman Sinha. This Face Recognition Attendance System uses advanced facial recognition technology for automated attendance tracking.'); return false;">
+            <a href="{{ url_for('developer') }}" class="feature-card">
                 <div class="feature-icon">💻</div>
                 <div class="feature-label">Developer</div>
             </a>
 
-            <a href="#" class="feature-card" onclick="alert('Help & Documentation: \n\n1. Student Details: Manage student records\n2. Face Detector: Start face recognition\n3. Attendance: View attendance records\n4. Train Data: Train recognition model\n5. Photos: View image gallery\n6. Help: This section\n\nFor technical support, contact: amansinha11.dev@example.com'); return false;">
+            <a href="{{ url_for('help') }}" class="feature-card">
                 <div class="feature-icon">❓</div>
                 <div class="feature-label">Help</div>
             </a>

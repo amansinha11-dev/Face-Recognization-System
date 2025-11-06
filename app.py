@@ -50,9 +50,7 @@ def run_face_recognition():
         flash('Please login first!', 'error')
         return redirect(url_for('login'))
     
-    flash('Face Recognition System is not available in web deployment. This feature requires desktop application.', 'error')
-    return redirect(url_for('dashboard'))
-
+    return render_template('face_detection.html', name=session.get('name'), role=session.get('role'))
 @app.route('/logout')
 def logout():
     session.clear()

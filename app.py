@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-import subprocess
-import sys
-import os
+# import subprocess
+# import sys
+# import os
 
 app = Flask(__name__)
 app.secret_key = 'face_recognition_secret_key_2025'
@@ -55,8 +55,8 @@ def run_face_recognition():
     
     try:
         # Launch main.py (Face Recognition System)
-        subprocess.Popen([sys.executable, 'main.py'])
-        flash('Face Recognition System launched successfully!', 'success')
+        #         subprocess.Popen([sys.executable, 'main.py'])
+                # flash('Face Recognition System launched successfully!', 'success')
     except Exception as e:
         flash(f'Error launching Face Recognition System: {str(e)}', 'error')
     
@@ -70,11 +70,11 @@ def logout():
 
 if __name__ == '__main__':
     # Check if required files exist
-    if not os.path.exists('main.py'):
-        print('Warning: main.py not found!')
-    if not os.path.exists('login.py'):
-        print('Warning: login.py not found!')
+    #     if not os.path.exists('main.py'):
+            # print('Warning: main.py not found!')
+        # if not os.path.exists('login.py'):
+            # print('Warning: login.py not found!')
     
-    print('Starting Flask Web Application...')
-    print('Access the application at: http://localhost:5000')
-    app.run(debug=True, host='0.0.0.0', port=5000)
+        # print('Starting Flask Web Application...')
+        # print('Access the application at: http://localhost:5000')
+        # app.run(debug=True, host='0.0.0.0', port=5000)

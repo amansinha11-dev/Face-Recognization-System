@@ -1,0 +1,5 @@
+# Flask Web Application Requirements
+# Install these in addition to the main project requirements
+
+Flask==3.0.0
+Werkzeug==3.0.1

@@ -317,7 +317,7 @@ ID, Name, Department, Date, Time, Status
 # Use LBPH instead of FaceNet for faster recognition
 ```
 
-## 🚧 Future Enhancements
+## 🚧 Future Enhancements Work 
 
 - [ ] Cloud database integration (MySQL/PostgreSQL)
 - [ ] Multi-camera support
